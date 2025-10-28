@@ -1,0 +1,18 @@
+device: "auto"
+train:
+  - _target_: src.metrics.SISNRiMetric
+    device: ${metrics.device}
+    name: "SI-SNRi"
+inference:
+  - _target_: src.metrics.SISNRiMetric
+    device: ${metrics.device}
+    name: "SI-SNRi"
+  - _target_: src.metrics.SDRiMetric
+    device: ${metrics.device}
+    name: "SDRi"
+  - _target_: src.metrics.PESQMetric
+    device: ${metrics.device}
+    name: "PESQ"
+  - _target_: src.metrics.STOIMetric
+    device: ${metrics.device}
+    name: "STOI"
