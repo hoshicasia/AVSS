@@ -94,7 +94,9 @@ class Inferencer(BaseTrainer):
             part_logs[part] = logs
         return part_logs
 
-    def process_batch(self, batch_idx, batch, metrics, part):
+    def process_batch(
+        self, batch_idx, batch, metrics, part, accumulation_steps=1, scaler=None
+    ):
         """
         Run batch through the model, compute metrics, and
         save predictions to disk.
@@ -117,10 +119,18 @@ class Inferencer(BaseTrainer):
                 and model outputs.
         """
         batch = self.move_batch_to_device(batch)
-        batch = self.transform_batch(batch)  # transform batch on device -- faster
+        batch = self.transform_batch(batch)
 
-        outputs = self.model(**batch)
-        batch.update(outputs)
+        use_amp = scaler is not None
+        if use_amp:
+            import torch.cuda.amp
+
+            with torch.cuda.amp.autocast():
+                outputs = self.model(**batch)
+                batch.update(outputs)
+        else:
+            outputs = self.model(**batch)
+            batch.update(outputs)
 
         if metrics is not None:
             for met in self.metrics["inference"]:
