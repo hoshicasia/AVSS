@@ -139,12 +139,24 @@ class BaseDataset(Dataset):
                 such as label and object path.
         """
         for entry in index:
-            assert "path" in entry, (
-                "Each dataset item should include field 'path'" " - path to audio file."
+            assert "mix" in entry, (
+                "Each dataset item should include field 'mix'" " - path to audio file."
             )
-            assert "label" in entry, (
-                "Each dataset item should include field 'label'"
-                " - object ground-truth label."
+            assert "label_1" in entry, (
+                "Each dataset item should include field 'label_1'"
+                " - path to label 1 file."
+            )
+            assert "label_2" in entry, (
+                "Each dataset item should include field 'label_2'"
+                " - path to label 2 file."
+            )
+            assert "mouths_1" in entry, (
+                "Each dataset item should include field 'mouths_1'"
+                " - path to mouths 1 file."
+            )
+            assert "mouths_2" in entry, (
+                "Each dataset item should include field 'mouths_2'"
+                " - path to mouths 2 file."
             )
 
     @staticmethod
